@@ -23,18 +23,14 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Stats Cards Nuevas */
         .stat-box { background: linear-gradient(145deg, #1e222d, #12151c); border-radius: 26px; padding: 20px; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: space-between; min-height: 110px; }
-        
         .achievement-card { border-radius: 24px; padding: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
         .badge-locked { filter: grayscale(1); opacity: 0.15; }
         .toggle-active { background: #22d3ee !important; color: black !important; }
 
-        /* Tooltip Gráfico */
         .bar-container:hover .tooltip { opacity: 1; visibility: visible; }
         .tooltip { opacity: 0; visibility: hidden; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; white-space: nowrap; pointer-events: none; transition: 0.2s; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
-        /* Degradados */
         .bg-grad-1 { background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%); }
         .bg-grad-2 { background: linear-gradient(135deg, #000428 0%, #004e92 100%); }
         .bg-grad-3 { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
@@ -46,12 +42,12 @@
 <body class="p-6 pb-44 max-w-lg mx-auto">
 
     <header class="text-center mt-6 mb-10">
-        <h1 class="text-5xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-white to-purple-500 italic">2026</h1>
+        <h1 class="text-5xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-white to-purple-500 italic">Transporte 2026</h1>
         <div id="streak-counter" class="text-[10px] font-bold uppercase tracking-[0.3em] mt-3 text-gray-400 italic">SYNCING...</div>
     </header>
 
     <main id="tab-registro" class="tab-content active">
-        <div class="glass-card p-7 mb-10 shadow-2xl border-white/10">
+        <div class="glass-card p-7 mb-8 shadow-2xl border-white/10">
             <div class="space-y-5">
                 <select id="tipo" onchange="toggleAvionMode()" class="input-style w-full font-bold text-sm">
                     <option value="🚇 Metro">🚇 Metro</option>
@@ -75,13 +71,23 @@
                 </div>
 
                 <div class="flex items-center justify-between px-1">
-                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">¿Sin línea fija?</span>
-                    <button id="no-line-btn" onclick="toggleNoLine()" class="px-4 py-2 rounded-full bg-white/5 text-[9px] font-black uppercase transition-all">Omitir</button>
+                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">No hay línea en este transporte?</span>
+                    <button id="no-line-btn" onclick="toggleNoLine()" class="px-4 py-2 rounded-full bg-white/5 text-[9px] font-black uppercase transition-all">Pulsa aquí</button>
                 </div>
 
                 <button onclick="guardarViaje(); hapticFeedback(60);" class="btn-main w-full py-5 text-black text-xs uppercase font-black tracking-widest shadow-xl shadow-cyan-500/20">Registrar</button>
             </div>
         </div>
+
+        <div class="flex gap-3 mb-4 animate-in fade-in">
+            <select id="filter-ciudad" onchange="actualizarUI()" class="bg-[#1a1f26] text-white text-[10px] font-black uppercase rounded-xl border border-white/5 p-3 w-1/2 outline-none focus:border-cyan-400 transition-all">
+                <option value="ALL">🌍 Todas</option>
+            </select>
+            <select id="filter-transporte" onchange="actualizarUI()" class="bg-[#1a1f26] text-white text-[10px] font-black uppercase rounded-xl border border-white/5 p-3 w-1/2 outline-none focus:border-cyan-400 transition-all">
+                <option value="ALL">🚀 Todos</option>
+            </select>
+        </div>
+
         <div id="frecuentes" class="space-y-4"></div>
     </main>
 
@@ -92,13 +98,10 @@
 
     <main id="tab-stats" class="tab-content">
         <h2 class="text-3xl font-black mb-8 italic uppercase text-cyan-400">Insights</h2>
-        
         <div id="stats-grid" class="grid grid-cols-2 gap-3 mb-4"></div>
         <div id="top-stats-full" class="space-y-3 mb-8"></div>
-        
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 ml-1">Actividad 24h</h3>
         <div id="hour-chart" class="glass-card p-6 flex items-end justify-between h-44 gap-1 mb-8 relative"></div>
-
         <div id="extra-stats-area"></div>
     </main>
 
@@ -117,8 +120,8 @@
     <nav class="fixed bottom-6 left-6 right-6 glass-card bg-black/80 backdrop-blur-2xl border-white/10 p-2 flex gap-1 z-50 shadow-2xl">
         <button onclick="switchTab('registro')" id="btn-tab-registro" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Viajes</button>
         <button onclick="switchTab('fame')" id="btn-tab-fame" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Logros</button>
-        <button onclick="switchTab('stats')" id="btn-tab-stats" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Stats</button>
-        <button onclick="switchTab('config')" id="btn-tab-config" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Data</button>
+        <button onclick="switchTab('stats')" id="btn-tab-stats" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Estadísticas</button>
+        <button onclick="switchTab('config')" id="btn-tab-config" class="flex-1 py-4 rounded-2xl text-[9px] font-black uppercase">Datos</button>
     </nav>
 
     <script>
@@ -130,14 +133,11 @@
         function toggleAvionMode() {
             const isAvion = document.getElementById('tipo').value === '✈️ Avión';
             document.getElementById('avion-extra').classList.toggle('hidden', !isAvion);
-            
-            // Cambio dinámico del placeholder
             const lineaInput = document.getElementById('linea');
             const noLineBtn = document.getElementById('no-line-btn');
-            
             if (isAvion) {
                 lineaInput.placeholder = "DESTINO";
-                noLineBtn.style.opacity = "0.3"; // Desactiva visualmente omitir línea si es avión
+                noLineBtn.style.opacity = "0.3";
             } else {
                 lineaInput.placeholder = "LÍNEA";
                 noLineBtn.style.opacity = "1";
@@ -147,7 +147,7 @@
         function toggleNoLine() {
             noLineActive = !noLineActive;
             const input = document.getElementById('linea');
-            input.value = noLineActive ? "N/A" : "";
+            input.value = noLineActive ? "SIN LÍNEA" : "";
             input.disabled = noLineActive;
             document.getElementById('no-line-btn').classList.toggle('toggle-active', noLineActive);
         }
@@ -175,14 +175,9 @@
             const ciudad = (c || document.getElementById('ciudad').value).toUpperCase().trim();
             const linea = (l || document.getElementById('linea').value).toUpperCase().trim();
             const modelo = m || (tipo === '✈️ Avión' ? document.getElementById('modelo-avion').value.toUpperCase().trim() : null);
-            
-            // Validación mínima
             if(!ciudad || !linea) return;
-            
             viajes.unshift({ id: Date.now(), tipo, ciudad, linea, modelo, fecha: new Date().toISOString() });
             save();
-            
-            // Limpieza si no es edición manual
             if(!c) { 
                 document.getElementById('ciudad').value = ""; 
                 if(!noLineActive) document.getElementById('linea').value = ""; 
@@ -195,21 +190,51 @@
             if (i > -1) { viajes.splice(i, 1); save(); }
         }
 
+        // --- GESTIÓN DE FILTROS ---
+        function updateFilters(allGrupos) {
+            const selC = document.getElementById('filter-ciudad');
+            const selT = document.getElementById('filter-transporte');
+            const valC = selC.value;
+            const valT = selT.value;
+
+            // Obtener únicos
+            const cities = [...new Set(allGrupos.map(g => g.ciudad))].sort();
+            const types = [...new Set(allGrupos.map(g => g.tipo))].sort();
+
+            selC.innerHTML = '<option value="ALL">🌍 TODAS</option>' + cities.map(c => `<option value="${c}">${c}</option>`).join('');
+            selT.innerHTML = '<option value="ALL">🚀 TODOS</option>' + types.map(t => `<option value="${t}">${t}</option>`).join('');
+
+            // Restaurar selección si existe
+            if(cities.includes(valC) || valC === 'ALL') selC.value = valC;
+            if(types.includes(valT) || valT === 'ALL') selT.value = valT;
+        }
+
         function actualizarUI() {
-            const grupos = {};
+            const gruposMap = {};
             viajes.forEach(v => {
                 const k = `${v.tipo}|${v.ciudad}|${v.linea}|${v.modelo || ''}`;
-                if (!grupos[k]) grupos[k] = { ...v, count: 0 };
-                grupos[k].count++;
+                if (!gruposMap[k]) gruposMap[k] = { ...v, count: 0 };
+                gruposMap[k].count++;
+            });
+            const allGrupos = Object.values(gruposMap);
+            
+            // Actualizar Opciones de Filtros
+            updateFilters(allGrupos);
+
+            // Leer valores actuales de filtros
+            const filterC = document.getElementById('filter-ciudad').value;
+            const filterT = document.getElementById('filter-transporte').value;
+
+            // Filtrar
+            const filteredGrupos = allGrupos.filter(g => {
+                return (filterC === 'ALL' || g.ciudad === filterC) && 
+                       (filterT === 'ALL' || g.tipo === filterT);
             });
 
-            document.getElementById('frecuentes').innerHTML = Object.values(grupos).sort((a,b) => b.count - a.count).map(g => {
+            document.getElementById('frecuentes').innerHTML = filteredGrupos.sort((a,b) => b.count - a.count).map(g => {
                 const color = `hsl(${Math.abs(g.ciudad.split('').reduce((a,b)=>a+b.charCodeAt(0),0)) % 360}, 75%, 65%)`;
                 
-                // LÓGICA DE VISUALIZACIÓN SIN LÍNEA
                 const isNoLine = g.linea === 'N/A' || g.linea === 'SIN LÍNEA';
-                
-                // Si no hay línea, la Ciudad es el título principal. Si hay línea, la línea es el título.
                 const mainTitle = isNoLine ? g.ciudad : g.linea;
                 const subTitle = isNoLine ? g.tipo : `${g.ciudad} ${g.modelo ? `• ${g.modelo}` : ''}`;
                 
@@ -229,7 +254,7 @@
                         <button onclick="guardarViaje('${g.ciudad}','${g.linea}','${g.tipo}', ${g.modelo ? `'${g.modelo}'` : 'null'})" class="w-12 h-12 rounded-2xl text-black shadow-lg active:scale-90 transition-all" style="background:${color}">+</button>
                     </div>
                 </div>`;
-            }).join('') || '<p class="text-center py-20 opacity-20 font-black uppercase text-[10px]">Sin viajes recientes</p>';
+            }).join('') || '<p class="text-center py-20 opacity-20 font-black uppercase text-[10px]">Sin resultados</p>';
         }
 
         function generarLogros() {
@@ -260,7 +285,7 @@
         function generarStats() {
             const total = viajes.length;
             if(total === 0) {
-                document.getElementById('stats-grid').innerHTML = '<p class="col-span-2 text-center py-10 opacity-30 text-xs font-black uppercase">Sin datos suficientes</p>';
+                document.getElementById('stats-grid').innerHTML = '<p class="col-span-2 text-center py-10 opacity-30 text-xs font-black uppercase">Faltan datos</p>';
                 return;
             }
 
@@ -275,7 +300,6 @@
             const topL = Object.entries(countsL).sort((a,b)=>b[1]-a[1])[0];
             const topT = Object.entries(countsT).sort((a,b)=>b[1]-a[1])[0];
 
-            // Render STATS "Bonitas"
             document.getElementById('stats-grid').innerHTML = `
                 <div class="stat-box border-l-4 border-cyan-400">
                     <div class="text-[9px] font-black uppercase text-gray-400 tracking-widest">Total Viajes</div>
@@ -296,7 +320,6 @@
                 </div>
             `;
 
-            // Gráfico
             const hours = new Array(24).fill(0);
             viajes.forEach(v => hours[new Date(v.fecha).getHours()]++);
             const max = Math.max(...hours) || 1;
@@ -307,21 +330,20 @@
                 </div>
             `).join('');
 
-            // CO2 y Aviones
             const co2 = viajes.filter(v => v.tipo !== '✈️ Avión').length * 1.8;
             const vuelos = viajes.filter(v => v.tipo === '✈️ Avión');
             let avionHtml = '';
             if(vuelos.length > 0) {
                 const modelos = {}; vuelos.forEach(v => { if(v.modelo) modelos[v.modelo] = (modelos[v.modelo] || 0) + 1 });
                 const topM = Object.entries(modelos).sort((a,b)=>b[1]-a[1])[0];
-                if(topM) avionHtml = `<div class="stat-box bg-cyan-400/5 border-l-4 border-cyan-400 mb-4"><p class="text-[9px] font-black uppercase text-cyan-400 tracking-widest">Aeronave Top</p><p class="text-2xl font-black italic mt-1 uppercase">${topM[0]}</p></div>`;
+                if(topM) avionHtml = `<div class="stat-box bg-cyan-400/5 border-l-4 border-cyan-400 mb-4"><p class="text-[9px] font-black uppercase text-cyan-400 tracking-widest">Avión Top</p><p class="text-2xl font-black italic mt-1 uppercase">${topM[0]}</p></div>`;
             }
 
             document.getElementById('extra-stats-area').innerHTML = avionHtml + `
                 <div class="stat-box bg-green-400/5 border-l-4 border-green-400">
                     <p class="text-[9px] font-black uppercase text-green-400 tracking-widest">Impacto Ecológico</p>
-                    <p class="text-3xl font-black mt-1">~${co2.toFixed(1)}kg</p>
-                    <p class="text-[9px] opacity-60 font-bold uppercase mt-1">CO2 ahorrado vs coche privado</p>
+                    <p class="text-3xl font-black mt-1">~${co2.toFixed(1)}kg de CO2 ahorrados</p>
+                    <p class="text-[9px] opacity-60 font-bold uppercase mt-1">respecto a usar coche</p>
                 </div>
             `;
         }
